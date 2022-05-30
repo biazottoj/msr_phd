@@ -1,0 +1,59 @@
+source,platform,project,uid,content,author,email,date
+commit,GIT,Vino4/vino4.github.io,https://github.com/Vino4/vino4.github.io/commit/187fec9653f59a3c9669083b87b708a70fb8fd3d,Automated Publisher,ffM477,matt@firstfoundry.co,2022-04-20T23:06:56.000-07:00
+commit,GIT,Vino4/vino4.github.io,https://github.com/Vino4/vino4.github.io/commit/89d22e4ef52c0b74dd72273b6afdcbd9d5e978ce,Automated Publisher,ffM477,matt@firstfoundry.co,2022-04-20T22:56:14.000-07:00
+commit,GIT,Vino4/vino4.github.io,https://github.com/Vino4/vino4.github.io/commit/b87485a9199b3854b5c7444a0a361d60cd7111f7,Automated Publisher,ffM477,matt@firstfoundry.co,2022-04-20T22:53:19.000-07:00
+commit,GIT,Vino4/vino4.github.io,https://github.com/Vino4/vino4.github.io/commit/18db0a6b35aaf8bedb9eec9ac90fb8824924ea9e,Automated Publisher,ffM477,matt@firstfoundry.co,2022-04-20T19:23:46.000-07:00
+commit,GIT,Vino4/vino4.github.io,https://github.com/Vino4/vino4.github.io/commit/baa2193fbe542007b0940bcdbe48043fee82361f,Automated Publisher,ffM477,matt@firstfoundry.co,2022-04-20T19:19:55.000-07:00
+commit,GIT,davorg/planetperl,https://github.com/davorg/planetperl/commit/fdba475d280ecd8d2fd4b73d4517b277d5bf6a8d,Automated Web page generation,davorg,dave@dave.org.uk,2022-04-26T04:50:45.000Z
+commit,GIT,davorg/planetperl,https://github.com/davorg/planetperl/commit/712892878bb41aa84592a959e8bd8a13df052eed,Automated Web page generation,davorg,dave@dave.org.uk,2022-04-26T00:59:58.000Z
+commit,GIT,ohuelab/QEPPI,https://github.com/ohuelab/QEPPI/commit/2850266fa516c4ddab985030e5b97f744726efc1,Automated clone.json update,actions-user,action@github.com,2022-04-26T00:06:17.000Z
+commit,GIT,davorg/planetperl,https://github.com/davorg/planetperl/commit/325015afd0df0e69604a008ae705208d7aff0110,Automated Web page generation,davorg,dave@dave.org.uk,2022-04-25T20:42:43.000Z
+commit,GIT,davorg/planetperl,https://github.com/davorg/planetperl/commit/a6cb3d8edfd60c963680feaded954b85bc44531b,Automated Web page generation,davorg,dave@dave.org.uk,2022-04-25T16:51:39.000Z
+commit,GIT,ohuelab/QEPPI,https://github.com/ohuelab/QEPPI/commit/243367beeb84cddd170a16579fe177324f77bb0b,Automated clone.json update,actions-user,action@github.com,2022-04-25T16:01:48.000Z
+commit,GIT,davorg/planetperl,https://github.com/davorg/planetperl/commit/9b097436d7bf0dd558386949b3a8171c4dbcd7b1,Automated Web page generation,davorg,dave@dave.org.uk,2022-04-25T12:53:00.000Z
+commit,GIT,davorg/planetperl,https://github.com/davorg/planetperl/commit/b90a74b4579da84034acf41eb653ba8a9a487be1,Automated Web page generation,davorg,dave@dave.org.uk,2022-04-25T08:46:01.000Z
+commit,GIT,ohuelab/QEPPI,https://github.com/ohuelab/QEPPI/commit/ea409a292caa0c9a55707d0ff54729b87c47923b,Automated clone.json update,actions-user,action@github.com,2022-04-25T08:02:20.000Z
+commit,GIT,davorg/planetperl,https://github.com/davorg/planetperl/commit/c0d9eb1d0764ca9d3d22720cd6bcfe40c563989e,Automated Web page generation,davorg,dave@dave.org.uk,2022-04-25T04:49:05.000Z
+commit,GIT,davorg/planetperl,https://github.com/davorg/planetperl/commit/513e26a3d4fe5a77e7b3b11674daaaf0754e286d,Automated Web page generation,davorg,dave@dave.org.uk,2022-04-25T00:58:19.000Z
+commit,GIT,ohuelab/QEPPI,https://github.com/ohuelab/QEPPI/commit/e10caec872364c4639b794d6ae905ed1339ff90c,Automated clone.json update,actions-user,action@github.com,2022-04-25T00:07:24.000Z
+commit,GIT,davorg/planetperl,https://github.com/davorg/planetperl/commit/1de3fe7c9eec43b73f35c77f1210bd69bbcde360,Automated Web page generation,davorg,dave@dave.org.uk,2022-04-24T20:42:39.000Z
+commit,GIT,ohuelab/QEPPI,https://github.com/ohuelab/QEPPI/commit/8a4b2aa71f3f8805d334c1a15b8c9eea3dd17459,Automated clone.json update,actions-user,action@github.com,2022-04-24T16:01:48.000Z
+commit,GIT,davorg/planetperl,https://github.com/davorg/planetperl/commit/5c5f4c50744fff7f78746af18e2d85d6f5f0efb1,Automated Web page generation,davorg,dave@dave.org.uk,2022-04-24T12:50:40.000Z
+commit,GIT,davorg/planetperl,https://github.com/davorg/planetperl/commit/bfecde283918af7bb9d447c8301d6d86e21e5fd5,Automated Web page generation,davorg,dave@dave.org.uk,2022-04-24T08:43:28.000Z
+commit,GIT,ohuelab/QEPPI,https://github.com/ohuelab/QEPPI/commit/e3e5ca525fa73d4e299e7c1205e73d080478908c,Automated clone.json update,actions-user,action@github.com,2022-04-24T08:02:03.000Z
+commit,GIT,davorg/planetperl,https://github.com/davorg/planetperl/commit/29a7022f046f11f225a22a4a74118e6c44576ac8,Automated Web page generation,davorg,dave@dave.org.uk,2022-04-24T00:58:30.000Z
+commit,GIT,ohuelab/QEPPI,https://github.com/ohuelab/QEPPI/commit/4d2f9c5e8c198be37f5236f03cacc5436878dd0f,Automated clone.json update,actions-user,action@github.com,2022-04-24T00:06:41.000Z
+commit,GIT,davorg/planetperl,https://github.com/davorg/planetperl/commit/7e016951b50dd2416f651c400397f975196f826f,Automated Web page generation,davorg,dave@dave.org.uk,2022-04-23T20:42:42.000Z
+commit,GIT,davorg/planetperl,https://github.com/davorg/planetperl/commit/b2ed695aa0c1acddee901d0a61297153f0836a84,Automated Web page generation,davorg,dave@dave.org.uk,2022-04-23T16:48:51.000Z
+commit,GIT,ohuelab/QEPPI,https://github.com/ohuelab/QEPPI/commit/b77bc9a97dd5995937ecaa35c20404676c17da83,Automated clone.json update,actions-user,action@github.com,2022-04-23T16:02:03.000Z
+commit,GIT,davorg/planetperl,https://github.com/davorg/planetperl/commit/3037825f8a879d3e4afde823b5a98cbcfbdd4ec1,Automated Web page generation,davorg,dave@dave.org.uk,2022-04-23T12:50:49.000Z
+commit,GIT,ohuelab/QEPPI,https://github.com/ohuelab/QEPPI/commit/b1142796feec4d1699190d88a0c54779621b906a,Automated clone.json update,actions-user,action@github.com,2022-04-23T08:01:56.000Z
+commit,GIT,davorg/planetperl,https://github.com/davorg/planetperl/commit/2358073deae97238a9b624432daa1e49735611b3,Automated Web page generation,davorg,dave@dave.org.uk,2022-04-23T04:45:56.000Z
+issue,GIT,home-assistant/core,https://github.com/home-assistant/core/issues/68726,Automatition based on `time` trigger executed one hour later after DST change,kukulich,awsome.email@superb.domain.nl,2022-03-27T06:45:39Z
+issue,GIT,sGabor92/shutter_mvp_dagger,https://github.com/sGabor92/shutter_mvp_dagger/issues/11,Implementing ProgramShutter Activity,sGabor92,awsome.email@superb.domain.nl,2017-10-20T07:20:34Z
+issue,GIT,inf3rno/e2e,https://github.com/inf3rno/e2e/issues/128,We need a same origin example,inf3rno,awsome.email@superb.domain.nl,2018-11-03T12:42:32Z
+issue,GIT,genielabs/HomeGenie,https://github.com/genielabs/HomeGenie/issues/291,Modbus TCP IP,amicum123,awsome.email@superb.domain.nl,2016-10-23T12:51:20Z
+issue,GIT,home-assistant/frontend,https://github.com/home-assistant/frontend/pull/12742,Use new localized context state and source in logbook,bdraco,awsome.email@superb.domain.nl,2022-05-20T19:32:38Z
+issue,GIT,fssotc/roadmap,https://github.com/fssotc/roadmap/issues/24,Wrokshop: DevOps,lejenome,awsome.email@superb.domain.nl,2016-07-15T19:03:34Z
+issue,GIT,nvaccess/nvda,https://github.com/nvaccess/nvda/issues/10401,Cell reading in Excel fails after interacting with a drop-down choice list box in a table,k-kolev1985,awsome.email@superb.domain.nl,2019-10-19T10:41:10Z
+issue,GIT,bruxy70/Garbage-Collection,https://github.com/bruxy70/Garbage-Collection/issues/379,"Move the collection 1 to the PREVIOUS week, if the collection falls on the day with collection 2",pjasinsk,awsome.email@superb.domain.nl,2022-03-18T12:33:26Z
+issue,GIT,gwtproject/gwt,https://github.com/gwtproject/gwt/issues/1690,Junit 4 support,dankurka,awsome.email@superb.domain.nl,2015-06-10T10:19:43Z
+issue,GIT,sieukrem/jn-npp-plugin,https://github.com/sieukrem/jn-npp-plugin/issues/106,Tree view example,Jzhenli,awsome.email@superb.domain.nl,2021-03-29T02:02:17Z
+issue,GIT,PharmaLedger-IMI/ctr-workspace,https://github.com/PharmaLedger-IMI/ctr-workspace/issues/92,homepage integration,joaoluis-pdm,awsome.email@superb.domain.nl,2022-01-27T14:24:26Z
+issue,GIT,securityscorecard/node-sdk,https://github.com/securityscorecard/node-sdk/pull/32,fix: lerna publish access flag,cristiandley,awsome.email@superb.domain.nl,2021-09-03T19:05:39Z
+issue,GIT,ethereum/tests,https://github.com/ethereum/tests/pull/837,EIP1559 blockchain tests,qbzzt,awsome.email@superb.domain.nl,2021-05-06T21:22:38Z
+issue,GIT,wirecard/woocommerce-ee,https://github.com/wirecard/woocommerce-ee/pull/377,Test automatition,flavius,awsome.email@superb.domain.nl,2020-05-25T09:17:08Z
+issue,GIT,thkl/hap-homematic,https://github.com/thkl/hap-homematic/issues/137,Variablen werden nicht aktualisiert,HomematicHamburg,awsome.email@superb.domain.nl,2020-07-09T06:23:03Z
+issue,GIT,tobymao/18xx,https://github.com/tobymao/18xx/pull/232,Add remaining tiles for 1861,sparr,awsome.email@superb.domain.nl,2020-04-30T08:53:08Z
+issue,GIT,microsoft/vscode,https://github.com/microsoft/vscode/issues/82135,the extension can not uninstall when click reload required.,xcrossed,awsome.email@superb.domain.nl,2019-10-09T02:18:17Z
+issue,GIT,Ash258/Scoop-GithubActions,https://github.com/Ash258/Scoop-GithubActions/issues/8,Hash check failed automatition,Ash258,awsome.email@superb.domain.nl,2019-06-22T21:53:49Z
+issue,GIT,ScoopInstaller/Main,https://github.com/ScoopInstaller/Main/pull/371,Add 25 descriptions,rasa,awsome.email@superb.domain.nl,2019-08-20T15:44:17Z
+issue,GIT,ethereum/tests,https://github.com/ethereum/tests/issues/463,Better knowledge of which tests need to be re-filled,ehildenb,awsome.email@superb.domain.nl,2018-05-29T22:17:49Z
+issue,GIT,ethereum/aleth,https://github.com/ethereum/aleth/pull/4859,[after Constantinople] test rpc,winsvega,awsome.email@superb.domain.nl,2018-02-23T13:34:12Z
+issue,GIT,ethereum/aleth,https://github.com/ethereum/aleth/pull/5348, test: Introduce aleth-unittests,chfast,awsome.email@superb.domain.nl,2018-11-12T19:14:32Z
+issue,GIT,sieukrem/jn-npp-plugin,https://github.com/sieukrem/jn-npp-plugin/issues/63,Есть некая проблема с назначением хоткеев.,trdm,awsome.email@superb.domain.nl,2018-01-31T11:56:23Z
+issue,GIT,appium/appium,https://github.com/appium/appium/issues/6910,AppiumDriver.setUrl() method does not work,liliabut,awsome.email@superb.domain.nl,2016-09-28T22:12:19Z
+issue,GIT,topas/homebridge-rfbuttons,https://github.com/topas/homebridge-rfbuttons/issues/2,button presses aren't reliable,faltim,awsome.email@superb.domain.nl,2017-04-29T19:25:49Z
+issue,GIT,gruntjs/grunt-contrib-qunit,https://github.com/gruntjs/grunt-contrib-qunit/issues/126,Error while running qunit task with grunt,gmiano,awsome.email@superb.domain.nl,2016-05-11T13:23:27Z
+issue,GIT,2600hz/kazoo,https://github.com/2600hz/kazoo/pull/358,KAZOO-2513,onnet,awsome.email@superb.domain.nl,2014-05-28T22:09:35Z
+issue,GIT,devryan/GamePanelX-V3,https://github.com/devryan/GamePanelX-V3/issues/59,SA-MP emergency server patch,antoniobenedetti,awsome.email@superb.domain.nl,2014-01-07T17:49:58Z
