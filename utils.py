@@ -59,6 +59,8 @@ def model_issues_data(key):
             print(c['repository_url'])
         #TechDebt: try to extract from data later
         repo = get_issue_repo(c['repository_url'])
+        email = 'awsome.email@superb.domain.nl'
+        #email = get_issue_author_email(m['user']['url']) [READY BUT NOT TESTED]
 
         data.append(['issue',
                          'GIT',
@@ -66,18 +68,20 @@ def model_issues_data(key):
                          c['html_url'] if c['html_url'] != None else 'null',
                          c['title'] if c['title'] != None else 'null',
                          c['user']['login'] if c['user'] != None else 'null',
-                         'awsome.email@superb.domain.nl',
+                         email,
                          c['created_at'] if c['created_at'] != None else 'null'])
 
         for m in get_issue_messages(c['comments_url']):
             if key in m['body']:
+                #email = get_issue_author_email(m['user']['url'])
+                email = 'awsome.email@superb.domain.nl'
                 data.append(['issue_comment',
                              'GIT',
                              repo,
                              c['html_url'] if not None else 'null',
                              m['body'] if not None else 'null',
                              m['user']['login'] if not None else 'null',
-                             'awsome.email@superb.domain.nl',
+                             email,
                              m['created_at'] if not None else 'null'])
     return data
 
@@ -88,6 +92,9 @@ def get_issue_repo(link:str):
 
 def get_issue_messages(link):
     return requests.get(link).json()
+
+def get_issue_author_email(link):
+    return requests.get(link).json()['email']
 
 #Function to write data to a CSV file
 def write_database(key:str):
