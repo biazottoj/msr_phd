@@ -25,5 +25,5 @@ I'll try two different approaches:
     print(c.author.name)'''
 
 
-key = 'automatition'
-write_csv_file(key)
+key = 'a div vai pro meio'
+write_database(key)

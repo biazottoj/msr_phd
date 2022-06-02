@@ -33,6 +33,7 @@ def search_commits(key):
 def search_issues(key):
     return requests.get(url=f'https://api.github.com/search/issues?q={key}').json()
 
+#Modeling commits data so export a CSV
 def model_commits_data(key):
     commits = search_commits(key)
     data = []
@@ -49,26 +50,47 @@ def model_commits_data(key):
                          c['commit']['author']['date'] if not None else 'null'])
     return data
 
+#Modeling issues data so export a CSV
 def model_issues_data(key):
     issues = search_issues(key)
     data = []
     for i, c in enumerate(issues['items']):
         if i == 0:
             print(c['repository_url'])
+        #TechDebt: try to extract from data later
+        repo = get_issue_repo(c['repository_url'])
+
         data.append(['issue',
                          'GIT',
-                         getIssueRepo(c['repository_url']),
+                         repo,
                          c['html_url'] if c['html_url'] != None else 'null',
                          c['title'] if c['title'] != None else 'null',
                          c['user']['login'] if c['user'] != None else 'null',
                          'awsome.email@superb.domain.nl',
                          c['created_at'] if c['created_at'] != None else 'null'])
+
+        for m in get_issue_messages(c['comments_url']):
+            if key in m['body']:
+                data.append(['issue_comment',
+                             'GIT',
+                             repo,
+                             c['html_url'] if not None else 'null',
+                             m['body'] if not None else 'null',
+                             m['user']['login'] if not None else 'null',
+                             'awsome.email@superb.domain.nl',
+                             m['created_at'] if not None else 'null'])
     return data
 
-def getIssueRepo(link):
-    return requests.get(link).json()['full_name'] if not None else 'null'
+#Recovering repo name for issues
+def get_issue_repo(link:str):
+    key = [key for key, item in enumerate(link) if item == '/']
+    return link[(key[4]+1):]
 
-def write_csv_file(key:str):
+def get_issue_messages(link):
+    return requests.get(link).json()
+
+#Function to write data to a CSV file
+def write_database(key:str):
     headers = ['source', 'platform', 'project', 'uid', 'content','author','email',  'date']
     rows = model_commits_data(key)
     rows.extend(model_issues_data(key))
