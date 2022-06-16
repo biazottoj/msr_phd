@@ -2,6 +2,7 @@ from utils import *
 import requests
 import pydriller as pdl
 import re
+import time
 
 '''
 I'll try two different approaches:
@@ -15,7 +16,23 @@ I'll try two different approaches:
 
 #repo = download_repo("apache", "echarts", 'projetcts')
 
-download_issues(owner='apache',
-                project='dubbo',
-                key='smell')
+owner = 'apache'
+projects = ['dubbo']
+
+projects_download_list = []
+'''for p in projects:
+    flag = download_issues(owner=owner,
+                    project=p,
+                    key='smell')
+    if flag:
+        path = f'projects/{owner}_{p}/repo'
+        os.mkdir(path)
+        download_repo(owner,p,path)
+        extract_comments(path)'''
+path = 'projects/apache_dubbo'
+
+extract_comments(path=path,
+                 key='smell',
+                 ower=owner,
+                 project='dubbo')
 
