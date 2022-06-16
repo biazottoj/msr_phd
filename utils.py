@@ -1,9 +1,12 @@
+import json
+
 from git import Repo
 import requests
 import os
 import requests
 import pydriller
 import csv
+import time
 
 #Function for download a repository
 def download_repo(user, project, dst_path):
@@ -112,3 +115,120 @@ def write_database(key:str):
             wr.append(f'{r[2]}\n')
         file.writelines(set(wr))
         file.close()
+
+#Function to recover the comments of a issue
+def download_issues_comments(link, n_comments, key):
+    n_pages = int(n_comments / 100)
+
+    if n_comments > (n_pages * 100) or n_pages == 0:
+        n_pages += 1
+    flag = False
+
+    comments_list = []
+
+    #As we have a limite of 100 results per requeste, we have to go through each page to recover the results 100 by 100;
+    for i in range(n_pages):
+        headers = {"accept": "application/vnd.github.v3+json",
+                   "Authorization": "token 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"}
+        comments_list = requests.get(f"{link}"
+                                f"?sort=created"
+                                f"&direction=desc"
+                                f"&per_page=100"
+                                f"&page={i + 1}",
+                                headers=headers).json()
+
+        for comment in comments_list:
+            if key in comment['body']:
+                comment['key_in_comment'] = True
+                flag = True
+            else:
+                comment['key_in_comment'] = False
+        #As we have a limit of 1000 requests/hour, the system wait 4 seconds after each request.
+        time.sleep(4)
+    
+    return comments_list, flag
+
+
+def store_comments(comments_list, issue_number, path):
+    for i,comment in enumerate(comments_list):
+        with open(f"{path}/issue_{issue_number}_comment_{i}.json", "w") as file:
+            json.dump(comment, file)
+
+
+def download_issues(owner, project, key):
+    #n_issues = get_issue_count(owner,project) ## Get all issues from a repo
+    n_issues = get_issue_search_count(owner, project, key) # Get the issues from a repo considering the key
+    n_pages = int(n_issues/100)
+
+    if 'projects' not in os.listdir():
+        os.mkdir('projects')
+    path = f'projects/{owner}_{project}'
+    os.mkdir(path)
+
+    if n_issues > (n_pages * 100) or n_pages == 0:
+        n_pages += 1
+
+    for i in range(n_pages):
+        print(f'Downloading page {i+1}/{n_pages}')
+        headers = {"accept": "application/vnd.github.v3+json",
+                   "Authorization": "token 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"}
+        '''issues_list = requests.get(f"https://api.github.com/repos/{owner}/{project}/issues"
+                              f"?sort=created"
+                              f"&direction=desc"
+                              f"&per_page=100"
+                              f"&page={i+1}",
+                              headers=headers).json()'''
+
+        issues_list = requests.get(f'https://api.github.com/search/issues?'
+                                   f'q={key}'
+                                   f'+type:issue'
+                                   f'+repo:{owner}/{project}'
+                                   f'+sort:author-date-asc'
+                                   f'&per_page=100'
+                                   f'&page={i+1}',
+                                   headers=headers).json()['items']
+        for issue in issues_list:
+
+            flag = False
+            comments=[]
+
+            if issue['comments'] > 0:
+                comments, flag = download_issues_comments(link = issue['comments_url'],
+                                                          key = key,
+                                                          n_comments=issue['comments'])
+            key_in_title = key in issue['title']
+            key_in_body = key in issue['body']
+
+            if flag or key_in_title or key_in_body:
+                with open(f"{path}/issue_{issue['number']}.json", "w") as file:
+                    issue['key_in_body'] = key_in_body
+                    issue['key_in_title'] = key_in_title
+                    issue['key_in_comments'] = flag
+                    json.dump(issue, file)
+                
+                store_comments(comments_list=comments,
+                               issue_number=issue['number'],
+                               path=path)
+
+        time.sleep(4)
+        n_files = len(os.listdir(path))
+        print(f'{n_files}/{n_issues} issues downaloaded!')
+        print('----')
+
+def get_issue_count(owner, project):
+    headers = {"accept": "application/vnd.github.v3+json",
+               "Authorization": "token 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"}
+    issues = requests.get(f"https://api.github.com/search/issues?q=repo:{owner}/{project}+type:issue",
+                          headers=headers).json()
+
+    return issues['total_count']
+
+def get_issue_search_count(owner, project, key):
+    headers = {"accept": "application/vnd.github.v3+json",
+               "Authorization": "token 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"}
+    issues_list = requests.get(f'https://api.github.com/search/issues?'
+                               f'q={key}'
+                               f'+type:issue'
+                               f'+repo:{owner}/{project}',
+                               headers=headers).json()
+    return issues_list['total_count']

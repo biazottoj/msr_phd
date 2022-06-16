@@ -1,6 +1,7 @@
 from utils import *
 import requests
 import pydriller as pdl
+import re
 
 '''
 I'll try two different approaches:
@@ -12,18 +13,9 @@ I'll try two different approaches:
     - For this I need a list of projects
 '''
 
+#repo = download_repo("apache", "echarts", 'projetcts')
 
+download_issues(owner='apache',
+                project='dubbo',
+                key='smell')
 
-'''for issue in response['items']:
-    for key,value in issue.items():
-        print(f'{key}: {value}')
-    print('\n---')'''
-
-#repo = pdl.Repository(path_to_repo="https://github.com/biazottoj/SubPath_Identifier")
-
-'''for c in repo.traverse_commits():
-    print(c.author.name)'''
-
-
-key = 'a div vai pro meio'
-write_database(key)
