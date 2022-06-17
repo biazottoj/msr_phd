@@ -7,6 +7,8 @@ import pydriller as pdl
 import csv
 import time
 import re
+from datetime import datetime
+import matplotlib.pyplot as plt
 
 #Function for download a repository
 def download_repo(user, project, dst_path):
@@ -117,7 +119,7 @@ def write_database(key:str):
         file.close()
 
 #Function to recover the comments of a issue
-def download_issues_comments(link, n_comments, key):
+def download_issues_comments(link, n_comments, key, token):
     n_pages = int(n_comments / 100)
 
     if n_comments > (n_pages * 100) or n_pages == 0:
@@ -129,7 +131,7 @@ def download_issues_comments(link, n_comments, key):
     #As we have a limite of 100 results per requeste, we have to go through each page to recover the results 100 by 100;
     for i in range(n_pages):
         headers = {"accept": "application/vnd.github.v3+json",
-                   "u": "biazottoj:token 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"}
+                   "authorization": f"token {token}"}
         comments_list = requests.get(f"{link}"
                                 f"?sort=created"
                                 f"&direction=desc"
@@ -152,9 +154,9 @@ def store_comments(comments_list, issue_number, path):
         with open(f"{path}/issue_{issue_number}_comment_{i}.json", "w") as file:
             json.dump(comment, file)
 
-def download_issues(owner, project, key):
+def download_issues(owner, project, key, token):
     #n_issues = get_issue_count(owner,project) ## Get all issues from a repo
-    n_issues = get_issue_search_count(owner, project, key) # Get the issues from a repo considering the key
+    n_issues = get_issue_search_count(owner, project, key, token) # Get the issues from a repo considering the key
 
     if n_issues > 0:
         n_pages = int(n_issues/100)
@@ -172,7 +174,7 @@ def download_issues(owner, project, key):
         for i in range(n_pages):
             print(f'Downloading page {i+1}/{n_pages}')
             headers = {"accept": "application/vnd.github.v3+json",
-                       "u": "biazottoj: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"}
+                       "authorization": f"token {token}"}
             issues_list = requests.get(f'https://api.github.com/search/issues?'
                                        f'q={key}'
                                        f'+type:issue'
@@ -205,22 +207,21 @@ def download_issues(owner, project, key):
                                    path=path)
 
             time.sleep(4)
-            n_files = len(os.listdir(path))
         return True
     else:
         return False
 
-def get_issue_count(owner, project):
+def get_issue_count(owner, project, token):
     headers = {"accept": "application/vnd.github.v3+json",
-               "Authorization": "token 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"}
+               "authorization": f"token {token}"}
     issues = requests.get(f"https://api.github.com/search/issues?q=repo:{owner}/{project}+type:issue",
                           headers=headers).json()
 
     return issues['total_count']
 
-def get_issue_search_count(owner, project, key):
+def get_issue_search_count(owner, project, key, token):
     headers = {"accept": "application/vnd.github.v3+json",
-               "u": "biazottoj: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"}
+               "authorization": f"token {token}"}
     issues_list = requests.get(f'https://api.github.com/search/issues?'
                                f'q={key}'
                                f'+type:issue'
@@ -255,4 +256,54 @@ def extract_comments(path, key, ower, project):
 
             with open(f'{path}/commits/commit_{c.hash}.json', 'w') as file:
                 json.dump(data,file)
+
+def extract_survival_time(owner, project):
+    path = f'projects/{owner}_{project}/issues'
+    list = os.listdir(path)
+    filtered_issues = [f for f in list if 'comment' not in f]
+    survival_times = []
+    for f in filtered_issues:
+        with open(f'{path}/{f}') as file:
+            j = json.load(file)
+            status = j['state']
+            open_date = datetime.strptime(j['created_at'].replace('T', ' ').replace('Z',''),'%Y-%m-%d %H:%M:%S')
+            if status == 'closed':
+                close_date = datetime.strptime(j['closed_at'].replace('T', ' ').replace('Z',''),'%Y-%m-%d %H:%M:%S')
+            else:
+                close_date = time.time()
+            survival_times.append((close_date - open_date).days)
+    build_box_plot(title="Issues survival time", data = survival_times)
+
+
+
+def build_box_plot(title, data, x='', y=''):
+    fig, ax = plt.subplots(figsize=(5, 5))
+
+    ax.set_title(title)
+
+    plt.boxplot(data)
+
+    plt.show()
+
+def build_stacked_bar():
+    labels = ['G1']
+
+    men_means = [50]
+    women_means = [30]
+    kid_means = [20]
+
+    width = 0.35  # the width of the bars: can also be len(x) sequence
+
+    fig, ax = plt.subplots()
+
+    ax.bar(labels, men_means, width, label = 'Men')
+    ax.bar(labels, women_means, width, bottom = men_means, label='Women')
+    ax.bar(labels, kid_means, width, bottom = women_means, label='Kids')
+
+    ax.set_ylabel('Scores')
+    ax.set_title('Scores by group and gender')
+    ax.legend()
+
+    plt.show()
+
 

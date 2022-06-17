@@ -31,8 +31,13 @@ projects_download_list = []
         extract_comments(path)'''
 path = 'projects/apache_dubbo'
 
-extract_comments(path=path,
-                 key='smell',
-                 ower=owner,
-                 project='dubbo')
+file = open('key.txt', 'r')
+token = file.readlines()[0]
+file.close()
 
+print(token)
+#extract_survival_time(owner, 'dubbo', token)
+
+#build_stacked_bar()
+
+#Join all projects toghether
