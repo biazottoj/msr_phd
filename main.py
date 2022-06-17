@@ -20,24 +20,42 @@ owner = 'apache'
 projects = ['dubbo']
 
 projects_download_list = []
-'''for p in projects:
-    flag = download_issues(owner=owner,
-                    project=p,
-                    key='smell')
-    if flag:
-        path = f'projects/{owner}_{p}/repo'
-        os.mkdir(path)
-        download_repo(owner,p,path)
-        extract_comments(path)'''
-path = 'projects/apache_dubbo'
 
 file = open('key.txt', 'r')
 token = file.readlines()[0]
 file.close()
 
-print(token)
-#extract_survival_time(owner, 'dubbo', token)
+'''for p in projects:
+    download_issues(owner=owner,
+                    project=p,
+                    key='code',
+                    token=token)
+    if flag:
+        path = f'projects/{owner}_{p}/repo'
+        os.mkdir(path)
+        download_repo(owner,p,path)
+        extract_comments(path)'''
+path = 'projects/'
 
-#build_stacked_bar()
+'''file = open('key.txt', 'r')
+token = file.readlines()[0]
+file.close()
+
+extract_survival_time(owner, 'dubbo', token)'''
+
+'''data = {}
+for p in projects:
+    types = analyze_commits(path=path,
+                            owner=owner,
+                            project=p)
+    data[p] = types
+
+
+build_stacked_bar(data)'''
+
+check = check_issues_solved_by_commits(owner='apache', project='dubbo')
+
+print(check)
+#extract_commits(path='projects/apache_dubbo',key = 'smell', owner='apache',project='dubbo')
 
 #Join all projects toghether

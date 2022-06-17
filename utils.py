@@ -1,6 +1,5 @@
 import json
 from git import Repo
-import requests
 import os
 import requests
 import pydriller as pdl
@@ -9,6 +8,8 @@ import time
 import re
 from datetime import datetime
 import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
 
 #Function for download a repository
 def download_repo(user, project, dst_path):
@@ -118,7 +119,9 @@ def write_database(key:str):
         file.writelines(set(wr))
         file.close()
 
-#Function to recover the comments of a issue
+# =================================== new task ===========================
+
+#Function to recover the comments of an issue
 def download_issues_comments(link, n_comments, key, token):
     n_pages = int(n_comments / 100)
 
@@ -145,33 +148,42 @@ def download_issues_comments(link, n_comments, key, token):
             else:
                 comment['key_in_comment'] = False
         #As we have a limit of 1000 requests/hour, the system wait 4 seconds after each request.
-        time.sleep(4)
+        #time.sleep(4)
     
     return comments_list, flag
 
+#Function to save each issue comment in a json file
 def store_comments(comments_list, issue_number, path):
     for i,comment in enumerate(comments_list):
         with open(f"{path}/issue_{issue_number}_comment_{i}.json", "w") as file:
             json.dump(comment, file)
 
+#Function to donwload issues
 def download_issues(owner, project, key, token):
     #n_issues = get_issue_count(owner,project) ## Get all issues from a repo
     n_issues = get_issue_search_count(owner, project, key, token) # Get the issues from a repo considering the key
 
     if n_issues > 0:
         n_pages = int(n_issues/100)
-
-        if 'projects' not in os.listdir():
-            os.mkdir('projects')
-        path = f'projects/{owner}_{project}'
-        os.mkdir(path)
-        path = path + '/issues'
-        os.mkdir(path)
-
         if n_issues > (n_pages * 100) or n_pages == 0:
             n_pages += 1
 
-        for i in range(n_pages):
+        path = f'projects/{owner}_{project}'
+
+        if 'projects' not in os.listdir():
+            os.mkdir('projects')
+
+        if f'{owner}_{project}' not in os.listdir('projects'):
+            os.mkdir(path)
+
+        if 'issues' in os.listdir(path):
+            os.rmdir(f'{path}/issues')
+
+        path = path + '/issues'
+
+        os.mkdir(path)
+
+        for i in range(5):
             print(f'Downloading page {i+1}/{n_pages}')
             headers = {"accept": "application/vnd.github.v3+json",
                        "authorization": f"token {token}"}
@@ -183,15 +195,18 @@ def download_issues(owner, project, key, token):
                                        f'&per_page=100'
                                        f'&page={i+1}',
                                        headers=headers).json()['items']
-            for issue in issues_list:
+            for i in issues_list:
 
+                issue = requests.get(i['url'], headers=headers).json()
+                #time.sleep(4)
                 flag = False
                 comments=[]
 
                 if issue['comments'] > 0:
                     comments, flag = download_issues_comments(link = issue['comments_url'],
                                                               key = key,
-                                                              n_comments=issue['comments'])
+                                                              n_comments=issue['comments'],
+                                                              token=token)
                 key_in_title = key in issue['title']
                 key_in_body = key in issue['body']
 
@@ -205,12 +220,9 @@ def download_issues(owner, project, key, token):
                     store_comments(comments_list=comments,
                                    issue_number=issue['number'],
                                    path=path)
+            #time.sleep(4)
 
-            time.sleep(4)
-        return True
-    else:
-        return False
-
+# Deprecated Function #
 def get_issue_count(owner, project, token):
     headers = {"accept": "application/vnd.github.v3+json",
                "authorization": f"token {token}"}
@@ -230,7 +242,7 @@ def get_issue_search_count(owner, project, key, token):
     return issues_list['total_count']
 
 
-def extract_comments(path, key, ower, project):
+def extract_commits(path, key, owner, project):
     repo = pdl.Repository(f'{path}/repo')
     os.mkdir(f'{path}/commits')
     for i, c in enumerate(repo.traverse_commits()):
@@ -240,22 +252,31 @@ def extract_comments(path, key, ower, project):
         if close_issue or has_key:
             if close_issue:
                 if has_key:
-                    data['operation'] = 'b'
+                    data['operation'] = 'Both'
                 else:
-                    data['operation'] = 'i'
+                    data['operation'] = 'Issue'
             else:
-                data['operation'] = 'k'
+                data['operation'] = 'Key'
 
-            data['project'] = f'{ower}/{project}'
+            data['project'] = f'{owner}/{project}'
+            data['message'] = c.msg
             data['modified_files'] = len(c.modified_files)
             data['loc_diff'] = c.lines
             data['sha'] = c.hash
-            data['author'] = c.author.email
+            data['author'] = c.author.name
             data['author_date'] = str(c.author_date)
             data['commit_date'] = str(c.committer_date)
 
             with open(f'{path}/commits/commit_{c.hash}.json', 'w') as file:
                 json.dump(data,file)
+
+def analyze_commits(path, owner, project):
+    extract_path = f'{path}/{owner}_{project}/commits'
+    types = []
+    for commit in os.listdir(extract_path):
+        with open(f'{extract_path}/{commit}', 'r') as file:
+            types.append(json.load(file)['operation'])
+    return types
 
 def extract_survival_time(owner, project):
     path = f'projects/{owner}_{project}/issues'
@@ -282,28 +303,87 @@ def build_box_plot(title, data, x='', y=''):
     ax.set_title(title)
 
     plt.boxplot(data)
+    plt.ylabel(y)
+    plt.xlabel(x)
 
     plt.show()
 
-def build_stacked_bar():
-    labels = ['G1']
+def build_stacked_bar(data = {}):
 
-    men_means = [50]
-    women_means = [30]
-    kid_means = [20]
+    project = []
+    type = []
 
-    width = 0.35  # the width of the bars: can also be len(x) sequence
+    for k in data.keys():
+        for d in data[k]:
+            project.append(k)
+            type.append(d)
 
-    fig, ax = plt.subplots()
+    rawData = {'project':project, 'type':type}
 
-    ax.bar(labels, men_means, width, label = 'Men')
-    ax.bar(labels, women_means, width, bottom = men_means, label='Women')
-    ax.bar(labels, kid_means, width, bottom = women_means, label='Kids')
+    df = pd.DataFrame(rawData)
 
-    ax.set_ylabel('Scores')
-    ax.set_title('Scores by group and gender')
-    ax.legend()
+    df.set_index(df['project'],inplace=True)
 
+    cross = pd.crosstab(index=df['project'],
+                        columns=df['type'],
+                        normalize="index")
+
+    cross_count = pd.crosstab(index=df['project'],
+                        columns=df['type'])
+
+    cross.plot(kind='bar',
+               stacked = True,
+               colormap = 'tab20c',
+               figsize=(8,4),
+               rot=0,
+               width = 1)
+
+    plt.legend(loc="lower right", ncol=len(set(df['type'])))
+    plt.ylabel("Proportion")
+    plt.xlabel("")
+    plt.title("Proportion of commits found")
+    for n, x in enumerate([*cross.index.values]):
+        for (proportion, y_loc, count) in zip(cross.loc[x], cross.loc[x].cumsum(), cross_count.loc[x]):
+            if proportion > 0:
+                plt.text(x=n - 0.22,
+                         y = (y_loc - proportion) + (proportion / 2),
+                         s=f'{round(proportion*100,1)}%',
+                         color="black",
+                         fontsize=8,
+                         fontweight="bold")
     plt.show()
 
+def extract_issues_solved_by_author(owner, project):
+    path = f'projects/{owner}_{project}/commits'
 
+    authors = {}
+    for c in os.listdir(path):
+        with open(f'{path}/{c}', 'r') as file:
+            commit = json.load(file)
+
+            if commit['operation'] == 'Issue' or commit['operation'] == 'Both':
+                possible_issues = [re.sub("[^0-9]","",x) for x in commit['message'].split(' ') if '#' in x]
+
+                if commit['author'] in authors.keys():
+                    authors[commit['author']].extend(possible_issues)
+                else:
+                    authors[commit['author']] = possible_issues
+    for c in authors.keys():
+        authors[c] = set(authors[c])
+    return authors #returns a dict with each commit author and all issues solved by the author in all commits
+
+def check_issues_solved_by_commits(owner, project):
+    authors = extract_issues_solved_by_author(owner, project)
+    issues = {}
+    for a, issue_list in authors.items():
+        for i in issue_list:
+            try:
+                with open(f'projects/{owner}_{project}/issues/issue_{i}.json', 'r') as file:
+                    issue = json.load(file)
+                    if issue['closed_by']['login'] == a:
+                        issues[i] = True
+                    else:
+                        issues[i] = False
+            except:
+                print(f'Issue {i} was not found!')
+    return issues
