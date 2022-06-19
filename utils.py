@@ -304,6 +304,31 @@ def check_author_issue(owner, project):
                 issue_list[issue_json['number']] = True if issue_json['user']['login'] == issue_json['closed_by']['login'] else False
     return issue_list
 
+
+def analyze_commits_modification_information(owner, project):
+    path = f'projects/{owner}_{project}/commits'
+    project = []
+    commits = []
+    loc = []
+    files = []
+    for commit in os.listdir(path):
+        with open(f'{path}/{commit}', 'r') as file:
+            c = json.load(file)
+            project.append(c['project'])
+            commits.append(c['sha'])
+            loc.append(c['loc_diff'])
+            files.append(c['modified_files'])
+
+    df = pd.DataFrame({
+        "project":project,
+        "commit": commits,
+        "loc": loc,
+        "files": files
+    })
+    df.set_index('project', inplace=True)
+
+    return df.groupby(['project']).mean()
+
 #======= Plot Functions ===============
 def build_box_plot(title, data, x='', y=''):
     fig, ax = plt.subplots(figsize=(5, 5))
@@ -348,3 +373,23 @@ def build_stacked_bar(data = {}):
                          fontsize=8,
                          fontweight="bold")
     plt.show()
+
+def build_bar_chart():
+    data = analyze_commits_modification_information('apache', 'dubbo')
+
+    courses = list(data.index)
+    values = list(data['loc'].values)
+
+    fig = plt.figure(figsize=(10, 5))
+
+    # creating the bar plot
+    plt.bar(courses, values, color='maroon',
+            width=0.4)
+
+    plt.xlabel("Courses offered")
+    plt.ylabel("No. of students enrolled")
+    plt.title("Students enrolled in different courses")
+    plt.show()
+
+
+

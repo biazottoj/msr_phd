@@ -1,18 +1,8 @@
-import re
+import pandas as pd
 
-keywords = [
-'close',
-'closes',
-'closed',
-'fix',
-'fixes',
-'fixed',
-'resolve',
-'resolves',
-'resolved'
-]
-text = 'I had fixed #11274 in this issue #886.'
+with open('data.csv','r') as file:
+    df = pd.read_csv(file)
 
-possible_issues = [re.sub("[^0-9]","",x) for x in text.split(' ') if '#' in x]
+filtered = df.groupby(['project']).mean()
 
-print(possible_issues)
+print(filtered)

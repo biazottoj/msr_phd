@@ -12,4 +12,8 @@ file.close()
 
 #extract_survival_time('apache', 'dubbo')
 
-build_stacked_bar({"dubbo":analyze_commits('projects', 'apache', 'dubbo')})
+#build_stacked_bar({"dubbo":analyze_commits('projects', 'apache', 'dubbo')})
+
+#analyze_commits_modification_information('apache', 'dubbo')
+#build_grouped_bar_chart(analyze_commits_modification_information('apache', 'dubbo'))
+build_bar_chart()
