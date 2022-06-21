@@ -63,7 +63,7 @@ def model_issues_data(key):
         if i == 0:
             print(c['repository_url'])
         #TechDebt: try to extract from data later
-        repo = get_issue_repo(c['repository_url'])
+        repo = get_issue_repo_project(c['repository_url'])
         email = 'awsome.email@superb.domain.nl'
         #email = get_issue_author_email(m['user']['url']) [READY BUT NOT TESTED]
         data.append(['issue',
@@ -89,9 +89,9 @@ def model_issues_data(key):
     return data
 
 #Recovering repo name for issues
-def get_issue_repo(link:str):
+def get_issue_repo_project(link:str):
     key = [key for key, item in enumerate(link) if item == '/']
-    return link[(key[4]+1):]
+    return link[(key[3]+1):].split('/')
 
 def get_issue_messages(link):
     return requests.get(link).json()
@@ -190,7 +190,7 @@ def download_issues(owner, project, key, token):
         os.mkdir(path)
         for i in range(n_pages):
             print(f'Downloading page {i+1}/{n_pages}')
-            headers = {"accept": "application/vnd.github.v3+json",
+            headers = {"accept": "application/vnd.github.v3.text-match+json",
                        "authorization": f"token {token}"}
             issues_list = requests.get(f'https://api.github.com/search/issues?'
                                        f'q={key}'
@@ -218,7 +218,10 @@ def download_issues(owner, project, key, token):
                         issue['key_in_title'] = key_in_title
                         issue['key_in_comments'] = flag
                         if (issue['state'] == 'closed'):
-                            commit = find_commit_close_issue(issue['events_url'], token)[0]
+                            try:
+                                commit = find_commit_close_issue(issue['events_url'], token)[0]
+                            except:
+                                commit = 'null'
                         else:
                             commit = 'null'
                         issue['commit'] = commit
@@ -226,11 +229,13 @@ def download_issues(owner, project, key, token):
                     store_comments(comments_list=comments,
                                    issue_number=issue['number'],
                                    path=path)
-            #time.sleep(4)
+            time.sleep(4)
     else:
         print(f'None issue was found with the keyword "{key}"!')
 
 def extract_commits(path, key, owner, project):
+    os.mkdir(f'projects/{owner}_{project}/repo')
+    download_repo(owner, project, f'{path}/repo')
     repo = pdl.Repository(f'{path}/repo')
     os.mkdir(f'{path}/commits')
     keywords = ['fix',
@@ -254,6 +259,7 @@ def extract_commits(path, key, owner, project):
                     data['operation'] = 'Issue'
             else:
                 data['operation'] = 'Key'
+
             data['project'] = f'{owner}/{project}'
             data['message'] = c.msg
             data['modified_files'] = len(c.modified_files)
@@ -288,7 +294,9 @@ def extract_survival_time(owner, project):
                 close_date = datetime.strptime(j['closed_at'].replace('T', ' ').replace('Z',''),'%Y-%m-%d %H:%M:%S')
                 survival_times.append((close_date - open_date).days)
     print(survival_times)
-    build_box_plot(title="Issues survival time", data = survival_times)
+
+    if len(survival_times) > 0:
+        build_box_plot(title=f"{owner}_{project}", data = survival_times)
 
 def check_author_issue(owner, project):
     issue_list = {}
@@ -336,7 +344,7 @@ def build_box_plot(title, data, x='', y=''):
     plt.boxplot(data)
     plt.ylabel(y)
     plt.xlabel(x)
-    plt.show()
+    plt.savefig(f'graphs/survival_time/{title}.png')
 
 def build_stacked_bar(data = {}):
     project = []
@@ -356,9 +364,9 @@ def build_stacked_bar(data = {}):
     cross.plot(kind='bar',
                stacked = True,
                colormap = 'tab20c',
-               figsize=(8,4),
+               figsize=(20,6),
                rot=0,
-               width = 1)
+               width = 0.35)
     plt.legend(loc="lower right", ncol=len(set(df['type'])))
     plt.ylabel("Proportion")
     plt.xlabel("")
@@ -366,13 +374,13 @@ def build_stacked_bar(data = {}):
     for n, x in enumerate([*cross.index.values]):
         for (proportion, y_loc, count) in zip(cross.loc[x], cross.loc[x].cumsum(), cross_count.loc[x]):
             if proportion > 0:
-                plt.text(x=n - 0.22,
+                plt.text(x=n - 0.12,
                          y = (y_loc - proportion) + (proportion / 2),
                          s=f'{round(proportion*100,1)}%',
                          color="black",
                          fontsize=8,
                          fontweight="bold")
-    plt.show()
+    plt.savefig(f'graphs/stacked/stacked_{datetime.now().day}.png')
 
 def build_bar_chart():
     data = analyze_commits_modification_information('apache', 'dubbo')
@@ -391,5 +399,88 @@ def build_bar_chart():
     plt.title("Students enrolled in different courses")
     plt.show()
 
+def search_repositories(key, token):
+    '''
+    The results are not complete
+    '''
+
+    ownerList = ['apache',
+                 'facebook',
+                 'github',
+                 'ibm',
+                 'oracle',
+                 'microsoft',
+                 'google',
+                 'eclipse',
+                 'docker',
+                 'salesforce',
+                 'netflix',
+                 'sportify',
+                 'shopify',
+                 'atom',
+                 'amazon']
+
+    ownerQuery = ''
+    for x in ownerList:
+        ownerQuery += f'user:{x}+'
+
+    headers = {"accept": "application/vnd.github.v3.text-match+json",
+               "authorization": f"token {token}"}
+
+    link = f'https://api.github.com/search/issues?'\
+                                       f'q={key}' \
+                                       f'+{ownerQuery}'\
+                                       f'type:issue'\
+                                       f'+sort:author-date-asc'\
 
 
+    issue_count = requests.get(link, headers=headers).json()['total_count']
+    nPages = int(issue_count / 100)
+    if issue_count > (nPages * 100):
+        nPages += 1
+
+    projects = {}
+    for o in ownerList:
+        projects[o.lower()] = {'projects': {}, 'count':0}
+
+    for i in range(nPages):
+        print(f'Downloading Page {i+1}/{nPages}')
+        link = f'https://api.github.com/search/issues?' \
+               f'q={key}' \
+               f'+{ownerQuery}' \
+               f'type:issue' \
+               f'+sort:author-date-asc' \
+               f'&per_page=100' \
+               f'&page={i+1}'
+
+        print(link)
+
+        issue_list = requests.get(link, headers).json()['items']
+
+        for issue in issue_list:
+            owner_project = get_issue_repo_project(issue['repository_url'])
+            owner = owner_project[0].lower()
+            project = owner_project[1].lower()
+
+            try:
+                projects[owner]['projects'][project]['issue_count'] += 1
+            except:
+                projects[owner]['projects'][project] = {'issue_count':1}
+
+        time.sleep(4)
+
+    count = 0
+    issue_c = 0
+    for o in projects.keys():
+        try:
+            projects[o]['count'] = len(projects[o]['projects'].keys())
+            count += len(projects[o]['projects'])
+            for k in projects[o]['projects'].keys():
+                issue_c += projects[o]['projects'][k]['issue_count']
+        except:
+            pass
+
+    projects['project_count'] = count
+    projects['total_issues'] = issue_c
+    with open('projects_list.json', 'w') as file:
+        json.dump(projects, file)
