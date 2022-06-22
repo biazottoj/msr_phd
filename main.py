@@ -31,7 +31,11 @@ projects = {"eclipse": ['jkube'],
 # build_grouped_bar_chart(analyze_commits_modification_information('apache', 'dubbo'))
 # build_bar_chart()
 
-# search_repositories('smell', token)
+#search_repositories('smell', token)
+
+#download_issues('microsoft','pylance-release','smell',token)
+
+
 types = {}
 for owner, p in projects.items():
     for p1 in p:
@@ -47,5 +51,5 @@ for owner, p in projects.items():
 
         # analyze_commits_modification_information(owner, p1)
 
-        print(f'{p1} -> {check_author_issue(owner, p1)}')
+        # print(f'{p1} -> {check_author_issue(owner, p1)}')
 # build_stacked_bar(types)

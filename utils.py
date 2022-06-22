@@ -148,7 +148,7 @@ def download_issues_comments(link, n_comments, key, token):
                                 f"&page={i + 1}",
                                 headers=headers).json()
         for comment in comments_list:
-            if key in comment['body']:
+            if key or 'smells' in comment['body']:
                 comment['key_in_comment'] = True
                 flag = True
             else:
@@ -194,7 +194,7 @@ def download_issues(owner, project, key, token):
                        "authorization": f"token {token}"}
             issues_list = requests.get(f'https://api.github.com/search/issues?'
                                        f'q={key}'
-                                       f'+type:issue'
+                                       f'+is:issue'
                                        f'+repo:{owner}/{project}'
                                        f'+sort:author-date-asc'
                                        f'&per_page=100'
@@ -210,8 +210,8 @@ def download_issues(owner, project, key, token):
                                                               key = key,
                                                               n_comments=issue['comments'],
                                                               token=token)
-                key_in_title = key in issue['title']
-                key_in_body = key in issue['body']
+                key_in_title = (key in issue['title']) or ("smells" in issue['title'])
+                key_in_body = (key in issue['body']) or ("smells" in issue['body'])
                 if flag or key_in_title or key_in_body:
                     with open(f"{path}/issue_{issue['number']}.json", "w") as file:
                         issue['key_in_body'] = key_in_body
@@ -445,7 +445,7 @@ def search_repositories(key, token):
     for o in ownerList:
         projects[o.lower()] = {'projects': {}, 'count':0}
 
-    for i in range(4, nPages):
+    for i in range(nPages):
         print(f'Downloading Page {i+1}/{nPages}')
         link = f'https://api.github.com/search/issues?' \
                f'q={key}' \
@@ -454,8 +454,6 @@ def search_repositories(key, token):
                f'+sort:author-date-asc' \
                f'&per_page=100' \
                f'&page={i+1}'
-
-        print(link)
 
         issue_list = requests.get(link, headers).json()['items']
 
@@ -484,3 +482,6 @@ def search_repositories(key, token):
 
     projects['project_count'] = count
     projects['total_issues'] = issue_c
+
+    with open('projects_list.json', 'w') as file:
+        json.dump(projects)
