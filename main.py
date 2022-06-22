@@ -1,3 +1,5 @@
+from builtins import object
+
 from utils import *
 import requests
 import pydriller as pdl
@@ -8,33 +10,42 @@ file = open('key.txt', 'r')
 token = file.readlines()[0]
 file.close()
 
-#download_issues('apache', 'dubbo','smell', token)
+projects = {"eclipse": ['jkube'],
+            "microsoft": ['typescript',
+                          'vscode',
+                          'wsl',
+                          'microsoft-ui-xaml',
+                          'pylance-release',
+                          'terminal'],
+            "facebook": ['jest',
+                         'flow',
+                         'react']}
 
-#extract_survival_time('apache', 'dubbo')
+# download_issues('apache', 'dubbo','smell', token)
 
-#build_stacked_bar({"dubbo":analyze_commits('projects', 'apache', 'dubbo')})
+# extract_survival_time('apache', 'dubbo')
 
-#analyze_commits_modification_information('apache', 'dubbo')
-#build_grouped_bar_chart(analyze_commits_modification_information('apache', 'dubbo'))
-#build_bar_chart()
+# build_stacked_bar({"dubbo":analyze_commits('projects', 'apache', 'dubbo')})
 
-#search_repositories('smell', token)
+# analyze_commits_modification_information('apache', 'dubbo')
+# build_grouped_bar_chart(analyze_commits_modification_information('apache', 'dubbo'))
+# build_bar_chart()
 
-with open('projects_list.json', 'r') as file:
-    projects = json.load(file)
-    types = {}
-    for owner in projects.keys():
-        if owner != 'project_count' and owner != 'total_issues':
-            for project in projects[owner]['projects'].keys():
-                #extract_survival_time(owner=owner, project=project)
+# search_repositories('smell', token)
+types = {}
+for owner, p in projects.items():
+    for p1 in p:
+        '''download_issues(owner=owner,
+                        project=p1,
+                        key='smell',
+                        token=token)'''
+        # extract_commits(path=f'projects/{owner}_{p1}', key='smell', owner=owner, project=p1)
 
-                try:
-                    types[f'{owner}_{project}'] = analyze_commits('projects', owner, project)
-                except:
-                    pass
-                '''download_issues(owner=owner,
-                                project=project,
-                                key='smell',
-                                token=token)
-                extract_commits(path=f'projects/{owner}_{project}',key='smell',owner=owner,project=project)'''
-    build_stacked_bar(types)
+        # types[p1] = analyze_commits('projects', owner, p1)
+
+        # extract_survival_time(owner, p1)
+
+        # analyze_commits_modification_information(owner, p1)
+
+        print(f'{p1} -> {check_author_issue(owner, p1)}')
+# build_stacked_bar(types)

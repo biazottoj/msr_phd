@@ -1,0 +1,29 @@
+C:\tools\Anaconda3\envs\msr\python.exe C:/Users/joao/PycharmProjects/msr_tasks_v1/main.py
+                  loc      files
+project
+eclipse/jkube  495.75  14.583333
+                              loc      files
+project
+microsoft/typescript  4532.705426  11.968992
+                        loc     files
+project
+microsoft/vscode  81.464519  2.382953
+
+                               loc  files
+project
+microsoft/microsoft-ui-xaml  113.5    3.0
+
+                           loc     files
+project
+microsoft/terminal  166.628571  5.942857
+                  loc  files
+project
+facebook/jest  112.52   4.18
+                      loc  files
+project
+facebook/flow  192.142857    3.0
+                       loc     files
+project
+facebook/react  158.670455  2.284091
+
+Process finished with exit code 0

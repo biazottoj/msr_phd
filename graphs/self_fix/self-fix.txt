@@ -1,0 +1,14 @@
+C:\tools\Anaconda3\envs\msr\python.exe C:/Users/joao/PycharmProjects/msr_tasks_v1/main.py
+
+jkube -> {1039: False, 1413: False, 469: False, 755: True, 774: True, 783: True, 803: True, 805: True, 843: True, 844: True, 878: True, 936: True}
+typescript -> {}
+vscode -> {}
+wsl -> {}
+microsoft-ui-xaml -> {}
+pylance-release -> {}
+terminal -> {}
+jest -> {}
+flow -> {}
+react -> {12188: False, 12420: False, 14363: True, 14458: False, 16154: False, 16221: False, 16461: False, 16972: False, 17415: False, 17460: False, 3071: False, 4000: False, 4213: False, 4972: False, 5342: True, 613: False, 6212: False, 6646: False, 7368: False, 9362: False}
+
+Process finished with exit code 0

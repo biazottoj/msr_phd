@@ -439,11 +439,13 @@ def search_repositories(key, token):
     if issue_count > (nPages * 100):
         nPages += 1
 
+    time.sleep(4)
+
     projects = {}
     for o in ownerList:
         projects[o.lower()] = {'projects': {}, 'count':0}
 
-    for i in range(nPages):
+    for i in range(4, nPages):
         print(f'Downloading Page {i+1}/{nPages}')
         link = f'https://api.github.com/search/issues?' \
                f'q={key}' \
@@ -467,7 +469,7 @@ def search_repositories(key, token):
             except:
                 projects[owner]['projects'][project] = {'issue_count':1}
 
-        time.sleep(4)
+        time.sleep(10)
 
     count = 0
     issue_c = 0
@@ -482,5 +484,3 @@ def search_repositories(key, token):
 
     projects['project_count'] = count
     projects['total_issues'] = issue_c
-    with open('projects_list.json', 'w') as file:
-        json.dump(projects, file)
